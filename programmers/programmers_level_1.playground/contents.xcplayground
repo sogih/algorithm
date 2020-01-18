@@ -2,6 +2,7 @@
 <playground version='6.0' target-platform='ios' display-mode='raw'>
     <pages>
         <page name='시저_암호'/>
-        <page name='행렬의_덧셈'/>
+        <page name='행렬의_덧셈'/>
+        <page name='x만큼_간격이_있는_n개의_숫자'/>
     </pages>
 </playground>
