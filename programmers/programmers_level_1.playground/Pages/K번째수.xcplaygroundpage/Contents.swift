@@ -33,19 +33,19 @@ import Foundation
 
 // MARK:- 나의 풀이
 func solution(_ array:[Int], _ commands:[[Int]]) -> [Int] {
-    
+
     var result = [Int]()
     var sliceArr = [Int]()
 
     commands.forEach {
-        
+
         for i in $0[0] ... $0[1] { sliceArr.append(array[i-1]) }
-        
+
         sliceArr.sort { $0<$1 }
         result.append(sliceArr[$0[2]-1])
         sliceArr.removeAll()
     }
-    
+
     return result
 }
 
