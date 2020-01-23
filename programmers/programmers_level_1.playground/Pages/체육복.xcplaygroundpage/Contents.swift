@@ -3,6 +3,8 @@
 import Foundation
 /*
  
+ https://programmers.co.kr/learn/courses/30/lessons/42862?language=swift
+ 
  문제 설명
  점심시간에 도둑이 들어, 일부 학생이 체육복을 도난당했습니다.
  다행히 여벌 체육복이 있는 학생이 이들에게 체육복을 빌려주려 합니다.
@@ -32,44 +34,75 @@ import Foundation
  */
 
 // MARK:- 나의 풀이
+//func solution(_ n:Int, _ lost:[Int], _ reserve:[Int]) -> Int {
+//    //1. 전체 학생수 만큼의 크기의 배열에 각각 element를 1을 할당, 첫 ,마지막 인덱스를 추가하여 0
+//    var arr = Array(repeating: 1, count: n+2)
+//    arr[0] = 0
+//    arr[n+1] = 0
+//    //2. 여벌의 체육복을 가져온 학생에 +1
+//    reserve.forEach {
+//        arr[$0] += 1
+//    }
+//    //3. 도난당한 학생의 index에는 element를 -1
+//    lost.forEach {
+//        arr[$0] -= 1
+//    }
+//    //4. 도난당한 학생에 근접한 학생중 element가 2인 학생이 있다면 빌려옴
+//    for i in 1...n {
+//        if arr[i] == 0 {
+//            if arr[i-1] == 2 {
+//                arr[i] += 1
+//                arr[i-1] -= 1
+//            } else if arr[i+1] == 2{
+//                arr[i] += 1
+//                arr[i+1] -= 1
+//            }
+//        }
+//    }
+//
+//    // 결과계산
+//    var result = 0
+//    for i in 1...n {
+//        if arr[i] >= 1{
+//            result += 1
+//        }
+//    }
+//    return result
+//}
+
+
+
 func solution(_ n:Int, _ lost:[Int], _ reserve:[Int]) -> Int {
-    //1. 전체 학생수 만큼의 크기의 배열에 각각 element를 1을 할당, 첫 ,마지막 인덱스를 추가하여 0
+    
+    //1. 전체 학생수 크기의 배열을 생성하여 1을 할당
     var arr = Array(repeating: 1, count: n+2)
-    arr[0] = 0
-    arr[n+1] = 0
+    
     //2. 여벌의 체육복을 가져온 학생에 +1
-    reserve.forEach {
-        arr[$0] += 1
-    }
-    //3. 도난당한 학생의 index에는 element를 -1
-    lost.forEach {
-        arr[$0] -= 1
-    }
-    //4. 도난당한 학생에 근접한 학생중 element가 2인 학생이 있다면 빌려옴
+    reserve.forEach { arr[$0] += 1 }
+    
+    //3. 도난당한 학생에 -1
+    lost.forEach { arr[$0] -= 1 }
+    
+    //4. 도난당한 학생의 앞 이나 뒤에 여벌이 있는 경우 빌려옴
     for i in 1...n {
         if arr[i] == 0 {
             if arr[i-1] == 2 {
                 arr[i] += 1
                 arr[i-1] -= 1
-            } else if arr[i+1] == 2{
+            } else if arr[i+1] == 2 {
                 arr[i] += 1
                 arr[i+1] -= 1
             }
         }
     }
     
-    // 결과계산
-    var result = 0
-    for i in 1...n {
-        if arr[i] >= 1{
-            result += 1
-        }
-    }
-    return result
+    //5. 체육복이 1벌 이상인 학생수를 반환
+    return arr.filter { $0 >= 1 }.count-2
 }
+
 
 solution(5, [2,4], [1,3,5])
 solution(5, [2,4], [3])
-solution(3, [3], [1])
+solution(3, [1,2], [2,3])
 
 //: [Next](@next)
