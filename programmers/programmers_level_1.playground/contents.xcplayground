@@ -9,6 +9,8 @@
         <page name='체육복'/>
         <page name='비밀지도'/>
         <page name='2016년'/>
-        <page name='가운데 글자 가져오기'/>
+        <page name='가운데 글자 가져오기'/>
+        <page name='나누어 떨어지는 숫자 배열'/>
+        <page name='두 정수 사이의 합'/>
     </pages>
 </playground>
