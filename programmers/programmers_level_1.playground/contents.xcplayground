@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<playground version='6.0' target-platform='ios' display-mode='raw'>
+<playground version='6.0' target-platform='ios'>
     <pages>
         <page name='시저_암호'/>
         <page name='행렬의_덧셈'/>
@@ -12,6 +12,7 @@
         <page name='가운데 글자 가져오기'/>
         <page name='나누어 떨어지는 숫자 배열'/>
         <page name='두 정수 사이의 합'/>
-        <page name='문자열 내 마음대로 정렬하기'/>
+        <page name='문자열 내 마음대로 정렬하기'/>
+        <page name='문자열 내 p와 y의 개수'/>
     </pages>
 </playground>
