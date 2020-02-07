@@ -16,6 +16,8 @@
         <page name='문자열 내 p와 y의 개수'/>
         <page name='핸드폰 번호 가리기'/>
         <page name='문자열 내림차순으로 배치하기'/>
-        <page name='문자열 다루기 기본'/>
+        <page name='문자열 다루기 기본'/>
+        <page name='문자열 압축 - not resolved'/>
+        <page name='서울에서 김서방 찾기'/>
     </pages>
 </playground>

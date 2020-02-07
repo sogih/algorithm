@@ -11,11 +11,11 @@ import Foundation
 func solution(_ s:String) -> Int {
     
     var str = s
-    var slice = Array(repeating: [String](), count: s.count)
+    var slice = Array(repeating: [String](), count: Int(s.count))
     
-    for i in 1...s.count {
+    for i in 1...Int(s.count/2) {
         str = s
-        for _ in 1...Int(s.count/i) {
+        for _ in 1...Int(s.count/) {
             slice[i-1].append(String(str.prefix(i)))
             str.removeFirst(i)
             if i > str.count && str != "" {
