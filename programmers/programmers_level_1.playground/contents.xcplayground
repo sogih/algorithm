@@ -19,6 +19,7 @@
         <page name='문자열 다루기 기본'/>
         <page name='문자열 압축 - not resolved'/>
         <page name='서울에서 김서방 찾기'/>
-        <page name='수박수박수박수박수박수?'/>
+        <page name='수박수박수박수박수박수?'/>
+        <page name='이상한 문자 만들기'/>
     </pages>
 </playground>
