@@ -636,8 +636,116 @@ print(bisect_left(a, x)) # 2
 print(bisect_right(a, x)) # 4
 ```
 
-정렬된 리스트에서 값이 특정 범위에 속하는 원소의 개수를 구할 때 효과적이다.
+정렬된 리스트에서 값이 특정 범위에 속하는 원소의 개수를 구할 때 효과적이다. 원소의 값을 x라고 할 때,
+
+left_value ≤ x < right_value 
+
+인 원소의 개수를 O(logN)으로 계산할 수 있다.
 
 ```python
+from bisect import bisect_left, bisect_right
 
+# 값이 [left_value, right_vlaue]인 데이터의 개수를 반환하는 함수
+def count_by_range(a, left_value, right_value):
+  right_index = bisect_right(a, right_value)
+  left_index = bisect_left(a, left_value)
+  return right_index - left_index
+
+# 리스트 선언
+a = [1, 2, 3, 3, 3, 3, 4, 4, 8, 9] 
+
+# 값이 4인 데이터 개수 출력
+print(count_by_range(a, 4, 4)) # 2
+
+# 값이 [-1, 3] 범위에 있는 데이터 개수 출력
+print(count_by_range(a, -1, 3)) # 6
+```
+
+### collections
+
+보통 파이썬에서는 deque를 사용해 큐를 구현한다.
+
+가장 앞쪽에 원소 추가
+
+가장 뒤쪽에 원소 추가
+
+가장 앞쪽의 원소 제거
+
+가장 뒤쪽의 원소 제거
+
+**리스트**
+
+O(N)
+
+O(1)
+
+O(N)
+
+O(1)
+
+**deque**
+
+O(1)
+
+O(1)
+
+O(1)
+
+O(1)
+
+`popleft()` — 첫 번째 원소를 제거
+
+`pop()` — 마지막 원소를 제거
+
+`appendleft(x)` — 첫 번째 인덱스에 원소 x 삽입
+
+`append(x)` — 마지막 인덱스에 원소 x 삽입
+
+따라서 deque를 큐 자료구조로 이용할 때, 원소를 삽입할 때에는 append()를 사용하고 원소를 삭제할 때에는 popleft()를 사용한다. 그러면 먼저 들어온 원소가 항상 먼저 나가게 된다.
+
+```python
+from collections import deque
+
+data = deque([2, 3, 4])
+data.appendleft(1)
+data.append(5)
+
+print(data) # deque([1, 2, 3, 4, 5])
+print(list(data)) # [1, 2, 3, 4, 5]
+```
+
+collections 라이브러리의 Counter는 등장 횟수를 세는 기능을 제공한다.
+
+```python
+from collections import Counter
+
+counter = Counter(["red", "blue", "red", "green", "blue", "blue"])
+
+print(counter["blue"]) # 3
+print(counter["green"]) # 1
+print(dict(counter)) # {'red': 2, 'blue': 3, 'green': 1}
+```
+
+### math
+
+자주 사용되는 수학적인 기능을 포함하는 라이브러리.
+
+`factorial(x)` — x팩토리얼
+
+`sqrt(x)` — x의 제곱근
+
+`gcd(a, b)` — a와 b의 최대 공약수
+
+`pi` — 파이
+
+`e` — 자연상수 e
+
+```python
+import math
+
+print(math.factorial(5)) # 5 팩토리얼 = 120
+print(math.sqrt(7)) # 2.6457513110645907
+print(math.gcd(21, 14)) # 7
+print(math.pi) # 3.141592653589793
+print(math.e) # 2.718281828459045
 ```
