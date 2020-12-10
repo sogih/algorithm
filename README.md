@@ -7,3 +7,5 @@
 [Python](Algorithm%2099c00f53b1f443dab70b1e964eb49545/Python%20f01bcd7ee2884bb19c7e5186fadb31bf.md)
 
 [Greedy](Algorithm%2099c00f53b1f443dab70b1e964eb49545/Greedy%209c69e411bd4040f0961288cba3248106.md)
+
+[Implementation](Algorithm%2099c00f53b1f443dab70b1e964eb49545/Implementation%20edf879b079364ff3aaabf643f5b2d00d.md)
