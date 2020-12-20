@@ -279,8 +279,125 @@ for step in steps:
 print(result)
 ```
 
-## 게임 개발
+## 예제 — 게임 개발
 
 ### 문제
 
+![Implementation%20edf879b079364ff3aaabf643f5b2d00d/Untitled_Diagram.svg](Implementation%20edf879b079364ff3aaabf643f5b2d00d/Untitled_Diagram.svg)
+
+1. 맵의 크기 n과 m을 입력 받는다 .
+2. 캐릭터의 초기 좌표(x, y)와 방향(k)을 입력 받는다. 
+3. 맵의 정보 (육지, 바다)를 맵의 크기 만큼 입력 받는다.
+4. 현재 위치에서 반시계 90도을 회전한다
+5. 가보지 않은 칸이 존재하면 한 칸을 전진한다. 
+
+    가보지 않은 칸이 없거나 또는 바다로 가로막혀 전진하지 못하면 다시 4단계로 돌아간다.
+
+    현재 위치에서 이동하지 못하고 360도를 회전한 경우 현재 방향을 유지한 채로 한칸 뒤로간뒤 4단계로 돌아간다.
+
+6. 캐릭터가 방문한 칸의 수를 출력한다.
+
+**입력 조건**
+
+- 3 ≤ N, M ≤ 50
+- 처음 위치는 항상 육지
+
+**출력 조건**
+
+- 모든 이동을 마친 후 캐릭터가 방문한 칸의 수를 출력
+
+**예시**
+
+```python
+# input
+4 4 # 1. 맵의 크기 입력
+1 1 0 # 2. 캐릭터 좌표, 방향 입력
+1 1 1 1 # 3. 맵의 정보 입력
+1 0 0 1
+1 1 0 1
+1 1 1 1
+
+# output
+# 3
+```
+
 ### 해설
+
+**내 답안**
+
+```python
+# failure
+```
+
+**교재 답안**
+
+- 보통 방향을 설정해서 이동하는 문제는 dx, dy라는 별도의 리스트를 만들어 방향을 정하는 것이 효과적이다.
+- 2차원 배열을 선언할 때는 컴프리헨션을 이용하는 것이 효율적
+- 함수 바깥에서 선언된 전역변수를 함수내에서 변경할 때 global 키워드를 붙여준다
+
+```python
+# n, m을 공백으로 구분하여 입력받기
+n, m = map(int, input().split())
+
+# 방문한 위치를 저장하기 위한 맵을 생성하여 0으로 초기화
+d = [[0] * m for _ in range(n)]
+
+# 현재 캐릭터의 X좌표, Y 좌표, 방향을 입력받기
+x, y, direction = map(int, input().split())
+
+# 현재 좌표 방문 처리
+d[x][y] = 1
+
+# 전체 맵 정보 입력받기
+array = []
+for i in range(n):
+  array.append(list(map(int, input().split())))
+
+# 북, 동, 남, 서 방향 정의
+dx = [-1, 0, 1, 0]
+dy = [0, 1, 0, -1]
+
+# 왼쪽으로 회전
+def turn_left():
+  global direction
+  direction -= 1
+  if direction == -1:
+    direction = 3
+
+# 시뮬레이션 시작
+count = 1
+turn_time = 0
+while True:
+  turn_left()
+  nx = x + dx[direction]
+  ny = y + dy[direction]
+  
+  # 회전 후 이동 가능한 경우
+  if d[nx][ny] == 0 and array[nx][ny] == 0:
+    d[nx][ny] = 1
+    x = nx
+    y = ny
+    count += 1
+    turn_time = 0
+    continue
+
+  # 회전 후 이동 불가능한 경우
+  else:
+    turn_time += 1
+
+  # 네 방향 모두 갈 수 없는 경우
+  if turn_time == 4:
+    nx = x - dx[direction]
+    ny = y - dy[direction]
+    # 뒤로 갈 수 있으면 이동하기
+    if array[nx][ny] == 0:
+      x = nx
+      y = ny
+    # 뒤가 바다로 막혀있는 경우
+    else:
+      break
+    turn_time = 0
+
+print(count)
+
+```
