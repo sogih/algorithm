@@ -283,7 +283,7 @@ print(result)
 
 ### 문제
 
-![Implementation%20edf879b079364ff3aaabf643f5b2d00d/Untitled_Diagram.svg](Implementation%20edf879b079364ff3aaabf643f5b2d00d/Untitled_Diagram.svg)
+![Implementation%20edf879b079364ff3aaabf643f5b2d00d/Untitled_Diagram-7.svg](Implementation%20edf879b079364ff3aaabf643f5b2d00d/Untitled_Diagram-7.svg)
 
 1. 맵의 크기 n과 m을 입력 받는다 .
 2. 캐릭터의 초기 좌표(x, y)와 방향(k)을 입력 받는다. 
@@ -325,8 +325,57 @@ print(result)
 
 **내 답안**
 
+![Implementation%20edf879b079364ff3aaabf643f5b2d00d/Untitled_Diagram_(1).svg](Implementation%20edf879b079364ff3aaabf643f5b2d00d/Untitled_Diagram_(1).svg)
+
 ```python
-# failure
+n, m = map(int, input().split())
+
+x, y, direction = map(int, input().split())
+
+array = []
+for i in range(n):
+  array.append(list(map(int, input().split())))
+
+array[x][y] = 1
+
+dx = [0, 1, 0, -1]
+dy = [1, 0, -1, 0]
+
+count = 1
+turn_time = 0
+
+while True:
+  direction = (direction + 3) % 4
+  print("방향:", direction)
+  nx = x + dx[direction]
+  ny = y + dy[direction]
+  if array[nx][ny] == 0:
+    array[nx][ny] = 1
+    x = nx
+    y = ny
+    count += 1
+    turn_time = 0
+    print("이동: ", x, y)
+    #print("현재방향", direction)
+    continue
+  else:
+    turn_time += 1
+  
+  if turn_time == 4:
+    nx = x - dx[direction]
+    ny = y - dy[direction]
+    if array[nx][ny] == 0:
+      array[nx][ny] = 1
+      x = nx
+      y = ny
+      turn_time = 0
+      count += 1
+      print("빠꾸: ", x, y)
+      #print("현재방향", direction)
+    else:
+      break
+
+print(count)
 ```
 
 **교재 답안**
