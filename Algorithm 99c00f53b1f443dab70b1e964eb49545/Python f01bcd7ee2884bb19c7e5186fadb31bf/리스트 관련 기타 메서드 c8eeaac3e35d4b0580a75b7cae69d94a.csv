@@ -1,9 +1,0 @@
-﻿method,description,time complexity
-append(),마지막에 원소를 추가,O(1)
-sort(),기본 정렬 기능으로 오름차수능로 정렬,O(NlogN)
-"sort(reverse = True) ",내림차순으로 정렬,O(NlogN)
-reverse(),원소의 순서를 뒤집음,O(N)
-"insert(index, object)",특정 인덱스 위치에 원소를 삽입,O(N)
-count(value),특정 값을 갖는 데이터의 개수,O(N)
-remove(value),"특정 값을 갖는 원소를 제거 
-(여러 개면 하나만 제거)",O(N)

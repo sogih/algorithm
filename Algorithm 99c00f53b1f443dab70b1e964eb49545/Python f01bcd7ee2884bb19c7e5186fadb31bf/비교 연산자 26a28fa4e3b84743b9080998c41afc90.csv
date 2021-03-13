@@ -1,7 +1,0 @@
-﻿Name,Description
-X == Y,X와 Y가 서로 같을 때 True.
-X ≠ Y,X와 Y가 서로 다를 때 True
-X > Y,X가 Y보다 클 때 True
-X < Y,X가 Y보다 작을 때 True
-X ≥ Y,X가 Y보다 크거나 같을 때 True
-X ≤ Y,X가 Y보다 작거나 같을 때 True
