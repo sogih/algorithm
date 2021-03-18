@@ -78,7 +78,7 @@ AVL 트리는 각 노드의 `height` 프로퍼티를 사용하여 균형을 축�
 public class AVLNode<Element> {
   //...
   public var height = 0
-	//...
+  //...
 }
 ```
 
@@ -150,7 +150,7 @@ X 노드에서 left rotation을 적용한 모습입니다. 위의 그림으로 �
 ```swift
 extension AVLTree {
 
-	private func leftRotate(_ node: AVLNode<Element>) -> AVLNode<Element> {    
+  private func leftRotate(_ node: AVLNode<Element>) -> AVLNode<Element> {    
     // 1
     let pivot = node.rightChild!
     // 2
@@ -179,18 +179,18 @@ right rotation은 left rotation의 대칭을 이룹니다.
 ```swift
 extension AVLTree {
 
-	private func rightRotate(_ node: AVLNode<Element>) -> AVLNode<Element> {
-	  //1
-	  let pivot = node.leftChild!
-		//2
-	  node.leftChild = pivot.rightChild
-		//3
-	  pivot.rightChild = node
-		//4
-	  node.height = max(node.leftHeight, node.rightHeight) + 1
-	  pivot.height = max(pivot.leftHeight, pivot.rightHeight) + 1
-	  return pivot
-	}
+  private func rightRotate(_ node: AVLNode<Element>) -> AVLNode<Element> {
+    //1
+    let pivot = node.leftChild!
+    //2
+    node.leftChild = pivot.rightChild
+    //3
+    pivot.rightChild = node
+    //4
+    node.height = max(node.leftHeight, node.rightHeight) + 1
+    pivot.height = max(pivot.leftHeight, pivot.rightHeight) + 1
+    return pivot
+  }
 }
 ```
 
@@ -230,13 +230,13 @@ extension AVLTree {
 
 ```swift
 extension AVLTree {
-	private func leftRightRotate(_ node: AVLNode<Element>) -> AVLNode<Element> {
-		guard let leftChild = node.leftChild else { return node }
-		//1.
-		node.leftChild = leftRotate(leftChild)
-		//2.
-		return rightRotate(node)
-	}
+  private func leftRightRotate(_ node: AVLNode<Element>) -> AVLNode<Element> {
+    guard let leftChild = node.leftChild else { return node }
+    //1.
+    node.leftChild = leftRotate(leftChild)
+    //2.
+    return rightRotate(node)
+  }
 }
 ```
 
@@ -248,13 +248,13 @@ extension AVLTree {
 
 ```swift
 extension AVLTree {
-	private func balanced(_ node: AVLNode<Element>) -> AVLNode<Element> {
-		switch node.balanceFactor {
-			case 2: //...
-			case -2: //...
-			default: return node
-		}
-	}
+  private func balanced(_ node: AVLNode<Element>) -> AVLNode<Element> {
+    switch node.balanceFactor {
+    case 2: //...
+    case -2: //...
+    default: return node
+    }
+  }
 }
 ```
 
@@ -275,26 +275,26 @@ child 노드의 `balanceFactor` **부호**를 통해 **단일 회전**이 필요
 
 ```swift
 extension AVLTree {
-	private func balanced(_ node: AVLNode<Element>) -> AVLNode<Element> {
-		switch node.balanceFactor {
-			case 2:
-				if let leftChild = node.leftChild,
-							 leftChild.balanceFactor == -1 {
-					return leftRightRotate(node)
-				} else {
-					return rightRotate(node)
-				}
-			case -2:
-				if let rightChild = node.rightChild,
-							 rightChild.balanceFactor == 1 {
-					return rightLeftRotate(node)
-				} else {
-					return leftRotate(node)
-				}
-			default: 
-				return node
-		}
-	}
+  private func balanced(_ node: AVLNode<Element>) -> AVLNode<Element> {
+    switch node.balanceFactor {
+    case 2:
+      if let leftChild = node.leftChild,
+             leftChild.balanceFactor == -1 {
+        return leftRightRotate(node)
+      } else {
+        return rightRotate(node)
+      }
+    case -2:
+      if let rightChild = node.rightChild,
+             rightChild.balanceFactor == 1 {
+        return rightLeftRotate(node)
+      } else {
+        return leftRotate(node)
+      }
+    default: 
+      return node
+    }
+  }
 }
 ```
 
@@ -308,23 +308,23 @@ extension AVLTree {
 
 ```swift
 extension AVLTree {
-	private func insert(
-		from node: AVLNode<Element>?, 
-		value: Element
-	) -> AVLNode<Element> {
+  private func insert(
+    from node: AVLNode<Element>?, 
+    value: Element
+  ) -> AVLNode<Element> {
 		
-		guard let node = node else { return AVLNode(value: value) }
+    guard let node = node else { return AVLNode(value: value) }
 		
-		if value < node.value {
-			node.leftChild = insert(from: node.leftChild, value: value)
-		} else {
-			node.rightChild = insert(from: node.rightChild, value: value)
-		}
+    if value < node.value {
+      node.leftChild = insert(from: node.leftChild, value: value)
+    } else {
+      node.rightChild = insert(from: node.rightChild, value: value)
+    }
 
-		let balancedNode = balanced(node)
-		balancedNode.height = max(balancedNode.leftHeight, balancedNode.rightHeight) + 1
-		return balancedNode
-	}
+    let balancedNode = balanced(node)
+    balancedNode.height = max(balancedNode.leftHeight, balancedNode.rightHeight) + 1
+    return balancedNode
+  }
 }
 ```
 
@@ -338,34 +338,34 @@ extension AVLTree {
 
 ```swift
 extension AVLTree {
-	private func remove(
-		node: AVLNode<Element>?, 
-		value: Element
-	) -> AVLNode<Element>? {
+  private func remove(
+    node: AVLNode<Element>?, 
+    value: Element
+  ) -> AVLNode<Element>? {
 		
-		guard let node = node else { return nil }
+    guard let node = node else { return nil }
 
-		if value == node.value {
-			if node.leftChild == nil && node.rightChild == nil {
-				return nil
-			}
-			if node.leftChild == nil {
-				return node.rightChild
-			}
-			if node.rightChild == nil {
-				return node.leftChild
-			}
-			node.value = node.rightChild!.min.value
-			node.rightChild = remove(node: node.rightChild, value: node.value)
-		} else if value < node.value {
-			node.leftChild = remove(node: node.leftChild, value: value)
-		} else {
-			node.rightChild = remove(node: node.rightChild, value: value)
-		}
+    if value == node.value {
+      if node.leftChild == nil && node.rightChild == nil {
+        return nil
+      }
+      if node.leftChild == nil {
+        return node.rightChild
+      }
+      if node.rightChild == nil {
+        return node.leftChild
+      }
+      node.value = node.rightChild!.min.value
+      node.rightChild = remove(node: node.rightChild, value: node.value)
+    } else if value < node.value {
+      node.leftChild = remove(node: node.leftChild, value: value)
+    } else {
+      node.rightChild = remove(node: node.rightChild, value: value)
+    }
 		
-		let balancedNode = balanced(node)
-		balancedNode.height = max(balancedNode.leftHeight balancedNode.rightHeight) + 1
-		return balancedNode
+    let balancedNode = balanced(node)
+    balancedNode.height = max(balancedNode.leftHeight balancedNode.rightHeight) + 1
+    return balancedNode
 	}
 }
 ```
