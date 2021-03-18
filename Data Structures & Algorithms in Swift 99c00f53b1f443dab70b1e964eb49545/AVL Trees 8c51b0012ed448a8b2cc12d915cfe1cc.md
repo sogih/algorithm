@@ -210,15 +210,15 @@ extension AVLTree {
 
 ```swift
 extension AVLTree {
-	private func rightLeftRotate(_ node: AVNode<Element>) -> AVNode<Element> {
-		guard let rightChild = node.rightChild else {
-			return node
-		}
-		//1.
-		node.rightChild = rightRotate(rightChild)
-		//2.
-		return leftRotate(node)
-	}
+  private func rightLeftRotate(_ node: AVNode<Element>) -> AVNode<Element> {
+    guard let rightChild = node.rightChild else {
+      return node
+    }
+    //1.
+    node.rightChild = rightRotate(rightChild)
+    //2.
+    return leftRotate(node)
+  }
 }
 ```
 
@@ -366,7 +366,7 @@ extension AVLTree {
     let balancedNode = balanced(node)
     balancedNode.height = max(balancedNode.leftHeight balancedNode.rightHeight) + 1
     return balancedNode
-	}
+  }
 }
 ```
 
