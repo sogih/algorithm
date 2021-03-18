@@ -208,8 +208,388 @@ extension AVLTree {
 
 ![AVL%20Trees%208c51b0012ed448a8b2cc12d915cfe1cc/image%209.png](AVL%20Trees%208c51b0012ed448a8b2cc12d915cfe1cc/image%209.png)
 
+```swift
+extension AVLTree {
+	private func rightLeftRotate(_ node: AVNode<Element>) -> AVNode<Element> {
+		guard let rightChild = node.rightChild else {
+			return node
+		}
+		//1.
+		node.rightChild = rightRotate(rightChild)
+		//2.
+		return leftRotate(node)
+	}
+}
+```
+
+![AVL%20Trees%208c51b0012ed448a8b2cc12d915cfe1cc/__-19.jpg](AVL%20Trees%208c51b0012ed448a8b2cc12d915cfe1cc/__-19.jpg)
+
+**Left-right rotation**
+
+![AVL%20Trees%208c51b0012ed448a8b2cc12d915cfe1cc/image%2010.png](AVL%20Trees%208c51b0012ed448a8b2cc12d915cfe1cc/image%2010.png)
+
+```swift
+extension AVLTree {
+	private func leftRightRotate(_ node: AVLNode<Element>) -> AVLNode<Element> {
+		guard let leftChild = node.leftChild else { return node }
+		//1.
+		node.leftChild = leftRotate(leftChild)
+		//2.
+		return rightRotate(node)
+	}
+}
+```
+
+![AVL%20Trees%208c51b0012ed448a8b2cc12d915cfe1cc/__-20.jpg](AVL%20Trees%208c51b0012ed448a8b2cc12d915cfe1cc/__-20.jpg)
+
 ### Balance
+
+이제 `balanceFactor`를 사용하여 노드의 밸런싱이 필요한지 여부를 결정하는 메서드를 작성해보겠습니다.
+
+```swift
+extension AVLTree {
+	private func balanced(_ node: AVLNode<Element>) -> AVLNode<Element> {
+		switch node.balanceFactor {
+			case 2: //...
+			case -2: //...
+			default: return node
+		}
+	}
+}
+```
+
+switch 문을 사용하여 `balanceFactor`를 세가지 케이스로 분기하였습니다.
+
+1. `balanceFactor`가 **2**일 때 트리가 왼쪽으로 치우쳐져 있습니다.
+그렇기 때문에 **right 또는 left-right rotation**을 통해서 균형에 도달할 수 있습니다.
+2. `balanceFactor`가 **-2**일 때 트리가 오른쪽으로 치우쳐져 있습니다.
+그렇기 때문에 **left 또는 right-left rotation**을 통해서 균형에 도달할 수 있습니다.
+3. 그 외의 경우에는 특정 노드가 균형 상태임을 나타냅니다.
+따라서 아무런 동작을 지정해주지 않아도 됩니다.
+
+child 노드의 `balanceFactor` **부호**를 통해 **단일 회전**이 필요한지 **다중 회전**이 필요한지 결정할 수 있습니다.
+
+![AVL%20Trees%208c51b0012ed448a8b2cc12d915cfe1cc/image%2011.png](AVL%20Trees%208c51b0012ed448a8b2cc12d915cfe1cc/image%2011.png)
+
+계속해서`balanced`함수를 작성해보겠습니다.
+
+```swift
+extension AVLTree {
+	private func balanced(_ node: AVLNode<Element>) -> AVLNode<Element> {
+		switch node.balanceFactor {
+			case 2:
+				if let leftChild = node.leftChild,
+							 leftChild.balanceFactor == -1 {
+					return leftRightRotate(node)
+				} else {
+					return rightRotate(node)
+				}
+			case -2:
+				if let rightChild = node.rightChild,
+							 rightChild.balanceFactor == 1 {
+					return rightLeftRotate(node)
+				} else {
+					return leftRotate(node)
+				}
+			default: 
+				return node
+		}
+	}
+}
+```
+
+`balanced` 메서드에서 균형으로 조정해주는 동작을 작성했습니다.
+
+이제 적절한 시점에서 해당 메서드를 호출해주기만 하면됩니다.
 
 ### Revisiting insertion
 
+`insert` 메서드에 밸런싱 동작을 추가합니다.
+
+```swift
+extension AVLTree {
+	private func insert(
+		from node: AVLNode<Element>?, 
+		value: Element
+	) -> AVLNode<Element> {
+		
+		guard let node = node else { return AVLNode(value: value) }
+		
+		if value < node.value {
+			node.leftChild = insert(from: node.leftChild, value: value)
+		} else {
+			node.rightChild = insert(from: node.rightChild, value: value)
+		}
+
+		let balancedNode = balanced(node)
+		balancedNode.height = max(balancedNode.leftHeight, balancedNode.rightHeight) + 1
+		return balancedNode
+	}
+}
+```
+
+이렇게하면 콜스택의 모든 노드가 균형임이 보장됩니다.
+
+또한 노드의 `height`도 업데이트합니다.
+
 ### Revisiting remove
+
+`Remove` 메서드에 밸런싱 동작을 추가합니다.
+
+```swift
+extension AVLTree {
+	private func remove(
+		node: AVLNode<Element>?, 
+		value: Element
+	) -> AVLNode<Element>? {
+		
+		guard let node = node else { return nil }
+
+		if value == node.value {
+			if node.leftChild == nil && node.rightChild == nil {
+				return nil
+			}
+			if node.leftChild == nil {
+				return node.rightChild
+			}
+			if node.rightChild == nil {
+				return node.leftChild
+			}
+			node.value = node.rightChild!.min.value
+			node.rightChild = remove(node: node.rightChild, value: node.value)
+		} else if value < node.value {
+			node.leftChild = remove(node: node.leftChild, value: value)
+		} else {
+			node.rightChild = remove(node: node.rightChild, value: value)
+		}
+		
+		let balancedNode = balanced(node)
+		balancedNode.height = max(balancedNode.leftHeight balancedNode.rightHeight) + 1
+		return balancedNode
+	}
+}
+```
+
+AVL에 대한 내용이 모두 끝났습니다. AVL 트리는 이진 탐색 트리의 끝판왕입니다.
+
+self-balancing 시스템은 insert와 remove 연산이 O(log n) 시간 복잡도를 가지도록 보장하기 때문입니다.
+
+## 전체 소스 코드
+
+```swift
+public class AVLNode<Element> {
+  
+  public var value: Element
+  public var leftChild: AVLNode?
+  public var rightChild: AVLNode?
+  public var height = 0
+  
+  public var balanceFactor: Int {
+    leftHeight - rightHeight
+  }
+  
+  public var leftHeight: Int {
+    leftChild?.height ?? -1
+  }
+  
+  public var rightHeight: Int {
+    rightChild?.height ?? -1
+  }
+  
+  public init(value: Element) {
+    self.value = value
+  }
+}
+
+extension AVLNode: CustomStringConvertible {
+  
+  public var description: String {
+    diagram(for: self)
+  }
+  
+  private func diagram(for node: AVLNode?,
+                       _ top: String = "",
+                       _ root: String = "",
+                       _ bottom: String = "") -> String {
+    guard let node = node else {
+      return root + "nil\n"
+    }
+    if node.leftChild == nil && node.rightChild == nil {
+      return root + "\(node.value)\n"
+    }
+    return diagram(for: node.rightChild, top + " ", top + "┌──", top + "│ ")
+      + root + "\(node.value)\n"
+      + diagram(for: node.leftChild, bottom + "│ ", bottom + "└──", bottom + " ")
+  }
+}
+
+extension AVLNode {
+  
+  public func traverseInOrder(visit: (Element) -> Void) {
+    leftChild?.traverseInOrder(visit: visit)
+    visit(value)
+    rightChild?.traverseInOrder(visit: visit)
+  }
+  
+  public func traversePreOrder(visit: (Element) -> Void) {
+    visit(value)
+    leftChild?.traversePreOrder(visit: visit)
+    rightChild?.traversePreOrder(visit: visit)
+  }
+  
+  public func traversePostOrder(visit: (Element) -> Void) {
+    leftChild?.traversePostOrder(visit: visit)
+    rightChild?.traversePostOrder(visit: visit)
+    visit(value)
+  }
+}
+```
+
+```swift
+public struct AVLTree<Element: Comparable> {
+  
+  public private(set) var root: AVLNode<Element>?
+  
+  public init() {}
+}
+
+extension AVLTree: CustomStringConvertible {
+  
+  public var description: String {
+    guard let root = root else { return "empty tree" }
+    return String(describing: root)
+  }
+}
+
+extension AVLTree {
+  
+  public mutating func insert(_ value: Element) {
+    root = insert(from: root, value: value)
+  }
+  
+  private func insert(from node: AVLNode<Element>?, value: Element) -> AVLNode<Element> {
+    guard let node = node else {
+      return AVLNode(value: value)
+    }
+    if value < node.value {
+      node.leftChild = insert(from: node.leftChild, value: value)
+    } else {
+      node.rightChild = insert(from: node.rightChild, value: value)
+    }
+    let balancedNode = balanced(node)
+    balancedNode.height = max(balancedNode.leftHeight, balancedNode.rightHeight) + 1
+    return balancedNode
+  }
+  
+  private func leftRotate(_ node: AVLNode<Element>) -> AVLNode<Element> {
+    let pivot = node.rightChild!
+    node.rightChild = pivot.leftChild
+    pivot.leftChild = node
+    node.height = max(node.leftHeight, node.rightHeight) + 1
+    pivot.height = max(pivot.leftHeight, pivot.rightHeight) + 1
+    return pivot
+  }
+  
+  private func rightRotate(_ node: AVLNode<Element>) -> AVLNode<Element> {
+    let pivot = node.leftChild!
+    node.leftChild = pivot.rightChild
+    pivot.rightChild = node
+    node.height = max(node.leftHeight, node.rightHeight) + 1
+    pivot.height = max(pivot.leftHeight, pivot.rightHeight) + 1
+    return pivot
+  }
+  
+  private func rightLeftRotate(_ node: AVLNode<Element>) -> AVLNode<Element> {
+    guard let rightChild = node.rightChild else {
+      return node
+    }
+    node.rightChild = rightRotate(rightChild)
+    return leftRotate(node)
+  }
+  
+  private func leftRightRotate(_ node: AVLNode<Element>) -> AVLNode<Element> {
+    guard let leftChild = node.leftChild else {
+      return node
+    }
+    node.leftChild = leftRotate(leftChild)
+    return rightRotate(node)
+  }
+  
+  private func balanced(_ node: AVLNode<Element>) -> AVLNode<Element> {
+    switch node.balanceFactor {
+    case 2:
+      if let leftChild = node.leftChild, leftChild.balanceFactor == -1 {
+        return leftRightRotate(node)
+      } else {
+        return rightRotate(node)
+      }
+    case -2:
+      if let rightChild = node.rightChild, rightChild.balanceFactor == 1 {
+        return rightLeftRotate(node)
+      } else {
+        return leftRotate(node)
+      }
+    default:
+      return node
+    }
+  }
+}
+
+extension AVLTree {
+  
+  public func contains(_ value: Element) -> Bool {
+    var current = root
+    while let node = current {
+      if node.value == value {
+        return true
+      }
+      if value < node.value {
+        current = node.leftChild
+      } else {
+        current = node.rightChild
+      }
+    }
+    return false
+  }
+}
+
+private extension AVLNode {
+  
+  var min: AVLNode {
+    leftChild?.min ?? self
+  }
+}
+
+extension AVLTree {
+  
+  public mutating func remove(_ value: Element) {
+    root = remove(node: root, value: value)
+  }
+  
+  private func remove(node: AVLNode<Element>?, value: Element) -> AVLNode<Element>? {
+    guard let node = node else {
+      return nil
+    }
+    if value == node.value {
+      if node.leftChild == nil && node.rightChild == nil {
+        return nil
+      }
+      if node.leftChild == nil {
+        return node.rightChild
+      }
+      if node.rightChild == nil {
+        return node.leftChild
+      }
+      node.value = node.rightChild!.min.value
+      node.rightChild = remove(node: node.rightChild, value: node.value)
+    } else if value < node.value {
+      node.leftChild = remove(node: node.leftChild, value: value)
+    } else {
+      node.rightChild = remove(node: node.rightChild, value: value)
+    }
+    let balancedNode = balanced(node)
+    balancedNode.height = max(balancedNode.leftHeight, balancedNode.rightHeight) + 1
+    return balancedNode
+  }
+}
+```
